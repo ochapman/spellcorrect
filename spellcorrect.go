@@ -5,7 +5,7 @@
 * 
 */
 
-package spell
+package spellcorrect
 
 import (
 	"io/ioutil"
