@@ -38,6 +38,7 @@ func train(training_data string) map[string]int {
 	return NWORDS
 }
 
+
 func edits1(word string, ch chan string) {
 	const alphabet = "abcdefghijklmnopqrstuvwxyz"
 	type Pair struct{a, b string}
@@ -85,6 +86,22 @@ func correct(word string, model map[string]int) string {
 
 func (sc SpellCorrect) Correct(word string) string {
 	return correct(word, sc.Model)
+}
+
+func (sc *SpellCorrect) Train(pattern string) {
+	NWORDS := make(map[string]int)
+	if pattern == "" {
+		panic("No pattern!")
+	}
+	re := regexp.MustCompile(pattern)
+	if content, err := ioutil.ReadFile(sc.Data); err == nil {
+		for _, w := range re.FindAllString(strings.ToLower(string(content)), -1) {
+			NWORDS[w]++;
+		}
+	} else {
+		panic("Failed loading training data.")
+	}
+	sc.Model = NWORDS
 }
 
 /*
